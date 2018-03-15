@@ -1,0 +1,5 @@
+config.php
+log.txt
+oauth.txt
+oauthToken.txt
+oauthTokenSecret.txt
