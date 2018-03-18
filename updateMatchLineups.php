@@ -72,7 +72,6 @@ try {
     $master = curl_multi_init();
     for ($i = 0; $i < $youthTeams_count; $i++) {
         $url = HOST . "/updateMatchLineup.php?exec_id=" . $exec_id . "&youthTeam_id=" . $youthTeams[$i] . "&startDate=" . $startDate . "&endDate=" . $endDate;
-        echo $url;
         $curl_arr[$i] = curl_init($url);
         curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
         curl_multi_add_handle($master, $curl_arr[$i]);

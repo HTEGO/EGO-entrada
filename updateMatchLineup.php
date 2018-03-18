@@ -20,18 +20,17 @@ try {
         $lineup = $HT->getYouthMatchLineup($youthMatch_id, $youthTeam_id);
         foreach ($lineup->getFinalPlayers() as $lineupPlayer) {
 
-            //Verify if exist youth player (dismissed or promoted)
+            //Improve: this petition is too slow
             try {
                 $player = $lineupPlayer->getPlayer();
             } catch (exception $ex) {
                 continue;
             }
-
             $youthPlayer_age = $player->getAge();
             $youthPlayer_days = $player->getDays();
             $position = $lineupPlayer->getRole();
             $stars = (float)$lineupPlayer->getRatingStars();
-
+ 
             //Discard not best players
             if (!isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) {
                 $youthPlayer_id = $lineupPlayer->getId();
@@ -81,20 +80,26 @@ function isBestPlayer($age, $days, $youthMatch_date, $position, $stars)
     }
 
     //matrix minimal stars [age][position]
+    //keeper
     $minimal[15][1] = 5.5;
-    $minimal[15][2] = 5.5;
-    $minimal[15][3] = 5.5;
-    $minimal[15][4] = 6.0;
-    $minimal[15][5] = 6.0;
-    $minimal[15][6] = 7.0;
     $minimal[16][1] = 6.0;
+    //Winback
+    $minimal[15][2] = 5.5;
     $minimal[16][2] = 6.0;
+    //Central
+    $minimal[15][3] = 5.5;
     $minimal[16][3] = 6.0;
+    //Winger
+    $minimal[15][4] = 6.0;
     $minimal[16][4] = 6.5;
+    //inner
+    $minimal[15][5] = 6.0;
     $minimal[16][5] = 6.5;
+    //Forward
+    $minimal[15][6] = 7.0;
     $minimal[16][6] = 7.5;
 
-    return $minimal[$age][$position] <= $stars + 3;
+    return $minimal[$age][$position] <= $stars;
 }
 
 // Convert hattrick MatchRoleID to friendly position
