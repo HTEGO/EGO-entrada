@@ -32,7 +32,7 @@ try {
         $seniorTeam = $team->getTeam();
         $isNew = in_array($seniorTeam->getId(),$league_id, $seniorTeams);
         $isNewYouthTeam = in_array($youthTeam_id, $youthTeams);
-        updateSpecificSeniorTeam($seniorTeam,$league_id,$isNew,$isNewYouthTeam);
+        updateSpecificSeniorTeam($con,$seniorTeam,$league_id,$isNew,$isNewYouthTeam);
     }
     query($con, "UPDATE league SET status=1 WHERE id=$league_id;");
     updateProcess($con, $exec_id);

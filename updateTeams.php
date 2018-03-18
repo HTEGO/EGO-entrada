@@ -23,7 +23,7 @@ try {
         $exec_id = $results->fetch_assoc()['id'];
     }
 
-    $url_base = 'http://' . $_SERVER['HTTP_HOST'] . '/EGO/updateTeam.php';
+    $url_base = 'http://' . $_SERVER['HTTP_HOST'] . '/updateTeam.php';
 
     $status = 1;
     $int = 0;

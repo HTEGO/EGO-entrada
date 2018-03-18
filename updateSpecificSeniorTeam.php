@@ -1,6 +1,6 @@
 <?php
 
-    function($seniorTeamm,$league_id,$isNew,$isNewYounthTeam){
+    function updateSpecificSeniorTeam($con,$seniorTeam,$league_id,$isNew,$isNewYounthTeam){
         $seniorTeam_id = $seniorTeam->getId();
         if (!$seniorTeam->isBot()) {
             $seniorTeam_name = addslashes($seniorTeam->getName());
@@ -22,3 +22,4 @@
             }
         }
     }
+?>
