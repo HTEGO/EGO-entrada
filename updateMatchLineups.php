@@ -57,13 +57,16 @@ try {
         $youthTeam_ids = rtrim($youthTeam_ids, '|');
         endDBcon($con);
     }
+    //The last array's index will have the pending teams to process.
     $youthTeams = explode('|', $youthTeam_ids, PARALLEL_THREADS + 1);
     $youthTeams_count = count($youthTeams);
     $continue = false;
+    
+    //If there is more teams than threads, it will open a new curl conection.
     if ($youthTeams_count == PARALLEL_THREADS + 1) {
         $continue = true;
         $youthTeams_count--;
-        $youthTeam_ids = $youthTeams[PARALLEL_THREADS];
+        $youthTeam_ids = $youthTeams[PARALLEL_THREADS]; //This are the pending teams as string
     }
     $curl_arr = array();
     $master = curl_multi_init();
@@ -76,6 +79,8 @@ try {
     do {
         curl_multi_exec($master, $running);
     } while ($running > 0);
+
+    //If true, it will open a new connection.
     if ($continue) {
         sleep(1);
         $url = HOST . "/EGO/updateMatchLineups.php";
@@ -87,6 +92,7 @@ try {
         curl_exec($ch);
         curl_close($ch);
     } else {
+        //The process it's finished.
         $con = startDBcon();
         $numEndYouthTeams = (int)query($con, "SELECT count(*) AS 'total' FROM youthteam WHERE active=1 AND status=1")->fetch_assoc()['total'];
         $status = $numEndYouthTeams == $numYouthTeams ? 1 : 0;

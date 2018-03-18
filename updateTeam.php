@@ -3,6 +3,7 @@ set_time_limit(PHP_INT_MAX);
 
 require_once 'config.php';
 require_once 'common.php';
+require_once 'updateSpecificSeniorTeam.php';
 
 try {
     $HT = new \PHT\PHT($config);
@@ -29,26 +30,9 @@ try {
     $league = $HT->getSeniorLeague($league_id);
     foreach ($league->getTeams() as $team) {
         $seniorTeam = $team->getTeam();
-        $seniorTeam_id = $seniorTeam->getId();
-        if (!$seniorTeam->isBot()) {
-            $seniorTeam_name = addslashes($seniorTeam->getName());
-            $user_id = $seniorTeam->getUserId();
-            if (in_array($seniorTeam_id, $seniorTeams)) {
-                query($con, "UPDATE seniorteam SET name='$seniorTeam_name', user_id=$user_id, league_id=$league_id, active=1 WHERE id=$seniorTeam_id;");
-            } else {
-                query($con, "INSERT INTO seniorteam(id, name, user_id, league_id, active) VALUES($seniorTeam_id, '$seniorTeam_name', $user_id, $league_id, 1);");
-            }
-            $youthTeam = $seniorTeam->getYouthTeam();
-            if (!$youthTeam == null) {
-                $youthTeam_id = $youthTeam->getId();
-                $youthTeam_name = addslashes($youthTeam->getName());
-                if (in_array($youthTeam_id, $youthTeams)) {
-                    query($con, "UPDATE youthteam SET name='$youthTeam_name', seniorTeam_id=$seniorTeam_id, active=1 WHERE id=$youthTeam_id;");
-                } else {
-                    query($con, "INSERT INTO youthteam(id, name, seniorTeam_id, active) VALUES($youthTeam_id, '$youthTeam_name', $seniorTeam_id, 1);");
-                }
-            }
-        }
+        $isNew = in_array($seniorTeam->getId(),$league_id, $seniorTeams);
+        $isNewYouthTeam = in_array($youthTeam_id, $youthTeams);
+        updateSpecificSeniorTeam($seniorTeam,$league_id,$isNew,$isNewYouthTeam);
     }
     query($con, "UPDATE league SET status=1 WHERE id=$league_id;");
     updateProcess($con, $exec_id);
