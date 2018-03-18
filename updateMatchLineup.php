@@ -48,6 +48,7 @@ try {
                 query($con, $query);
                 $saveMatch = true;
             }
+        }
         if ($saveMatch) {
             $youthMatch_type = $match->getType();
             $youthMatch_HomeTeam_Id = $match->getHomeTeamId();
@@ -93,7 +94,7 @@ function isBestPlayer($age, $days, $youthMatch_date, $position, $stars)
     $minimal[16][5] = 6.5;
     $minimal[16][6] = 7.5;
 
-    return $minimal[$age][$position] <= $stars;
+    return $minimal[$age][$position] <= $stars + 3;
 }
 
 // Convert hattrick MatchRoleID to friendly position
