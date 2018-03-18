@@ -33,22 +33,21 @@ try {
             $stars = (float)$lineupPlayer->getRatingStars();
 
             //Discard not best players
-            if (!isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) continue;
-
-            $youthPlayer_id = $lineupPlayer->getId();
-            $youthPlayer_first_name = addslashes($lineupPlayer->getFirstName());
-            $youthPlayer_last_name = addslashes($lineupPlayer->getLastName());
-            $youthPlayer_specialty = $player->getSpecialty();
-            $youthPlayer_promotedIn = $player->getCanBePromotedIn();
-            $query = "INSERT INTO youthplayer(id, first_name, last_name, specialty, age, days, date, promotedIn, youthTeam_id) ";
-            $query .= "VALUES($youthPlayer_id, '$youthPlayer_first_name', '$youthPlayer_last_name', $youthPlayer_specialty, $youthPlayer_age, $youthPlayer_days,CURTIME(), $youthPlayer_promotedIn, $youthTeam_id);";
-            query($con, $query);
-            $order = $lineupPlayer->getIndividualOrder();
-            $order = $order == null ? "NULL" : $order;
-            $query = "INSERT INTO youthmatchlineup(youthMatch_id, youthPlayer_id, position, `order`, stars) VALUES($youthMatch_id, $youthPlayer_id, $position, $order, $stars);";
-            query($con, $query);
-            $saveMatch = true;
-        }
+            if (!isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) {
+                $youthPlayer_id = $lineupPlayer->getId();
+                $youthPlayer_first_name = addslashes($lineupPlayer->getFirstName());
+                $youthPlayer_last_name = addslashes($lineupPlayer->getLastName());
+                $youthPlayer_specialty = $player->getSpecialty();
+                $youthPlayer_promotedIn = $player->getCanBePromotedIn();
+                $query = "INSERT INTO youthplayer(id, first_name, last_name, specialty, age, days, date, promotedIn, youthTeam_id) ";
+                $query .= "VALUES($youthPlayer_id, '$youthPlayer_first_name', '$youthPlayer_last_name', $youthPlayer_specialty, $youthPlayer_age, $youthPlayer_days,CURTIME(), $youthPlayer_promotedIn, $youthTeam_id);";
+                query($con, $query);
+                $order = $lineupPlayer->getIndividualOrder();
+                $order = $order == null ? "NULL" : $order;
+                $query = "INSERT INTO youthmatchlineup(youthMatch_id, youthPlayer_id, position, `order`, stars) VALUES($youthMatch_id, $youthPlayer_id, $position, $order, $stars);";
+                query($con, $query);
+                $saveMatch = true;
+            }
         if ($saveMatch) {
             $youthMatch_type = $match->getType();
             $youthMatch_HomeTeam_Id = $match->getHomeTeamId();

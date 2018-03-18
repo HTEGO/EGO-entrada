@@ -71,7 +71,8 @@ try {
     $curl_arr = array();
     $master = curl_multi_init();
     for ($i = 0; $i < $youthTeams_count; $i++) {
-        $url = HOST . "/EGO/updateMatchLineup.php?exec_id=" . $exec_id . "&youthTeam_id=" . $youthTeams[$i] . "&startDate=" . $startDate . "&endDate=" . $endDate;
+        $url = HOST . "/updateMatchLineup.php?exec_id=" . $exec_id . "&youthTeam_id=" . $youthTeams[$i] . "&startDate=" . $startDate . "&endDate=" . $endDate;
+        echo $url;
         $curl_arr[$i] = curl_init($url);
         curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
         curl_multi_add_handle($master, $curl_arr[$i]);
@@ -83,7 +84,7 @@ try {
     //If true, it will open a new connection.
     if ($continue) {
         sleep(1);
-        $url = HOST . "/EGO/updateMatchLineups.php";
+        $url = HOST . "/updateMatchLineups.php";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
