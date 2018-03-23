@@ -30,8 +30,7 @@ try {
             $youthPlayer_days = $player->getDays();
             $position = $lineupPlayer->getRole();
             $stars = (float)$lineupPlayer->getRatingStars();
- 
-            //Discard not best players
+             //Discard not best players
             if (!isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) {
                 $youthPlayer_id = $lineupPlayer->getId();
                 $youthPlayer_first_name = addslashes($lineupPlayer->getFirstName());
@@ -80,6 +79,27 @@ function isBestPlayer($age, $days, $youthMatch_date, $position, $stars)
     }
 
     //matrix minimal stars [age][position]
+    //keeper (portero)
+    $minimal[15][1] = 3.5;
+    $minimal[16][1] = 4.0;
+    //Winback (lateral)
+    $minimal[15][2] = 3.5;
+    $minimal[16][2] = 4.0;
+    //Central
+    $minimal[15][3] = 3.5;
+    $minimal[16][3] = 4.0;
+    //Winger (extremo)
+    $minimal[15][4] = 4.0;
+    $minimal[16][4] = 4.5;
+    //inner (medio)
+    $minimal[15][5] = 4.0;
+    $minimal[16][5] = 4.5;
+    //Forward (Delantero)
+    $minimal[15][6] = 5.0;
+    $minimal[16][6] = 5.5;
+
+    /*
+    //matrix minimal stars [age][position]
     //keeper
     $minimal[15][1] = 5.5;
     $minimal[16][1] = 6.0;
@@ -98,6 +118,7 @@ function isBestPlayer($age, $days, $youthMatch_date, $position, $stars)
     //Forward
     $minimal[15][6] = 7.0;
     $minimal[16][6] = 7.5;
+    */
 
     return $minimal[$age][$position] <= $stars;
 }
