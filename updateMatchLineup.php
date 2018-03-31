@@ -6,9 +6,17 @@ try {
     $HT = new \PHT\PHT($config);
 
     $youthTeam_id = $_GET["youthTeam_id"];
-    $startDate = $_GET["startDate"];
-    $endDate = $_GET["endDate"];
+  /*
+  $startDate = $_GET["startDate"];
+    $endDate = $_GET["endDate"];*/
     $exec_id = $_GET["exec_id"];
+
+/*    $youthTeam_id = 2647067;*/
+$startDate = "2018-03-12";
+$endDate = "2018-03-23";
+/*$exec_id = 3;*/
+
+
 
     $con = startDBcon();
 
@@ -16,8 +24,10 @@ try {
     foreach ($matches as $match) {
         $saveMatch = false;
         $youthMatch_id = $match->getId();
+
         $youthMatch_date = $match->getDate();
         $lineup = $HT->getYouthMatchLineup($youthMatch_id, $youthTeam_id);
+        echo "Partido $youthMatch_id <br>";
         foreach ($lineup->getFinalPlayers() as $lineupPlayer) {
 
             //Improve: this petition is too slow
@@ -30,8 +40,12 @@ try {
             $youthPlayer_days = $player->getDays();
             $position = $lineupPlayer->getRole();
             $stars = (float)$lineupPlayer->getRatingStars();
+
+echo "<hr>Intentando: ".$lineupPlayer->getLastName() . " $position <br>";
+
              //Discard not best players
-            if (!isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) {
+            if (isBestPlayer($youthPlayer_age, $youthPlayer_days, $youthMatch_date, $position, $stars)) {
+
                 $youthPlayer_id = $lineupPlayer->getId();
                 $youthPlayer_first_name = addslashes($lineupPlayer->getFirstName());
                 $youthPlayer_last_name = addslashes($lineupPlayer->getLastName());
@@ -53,6 +67,7 @@ try {
             $youthMatch_AwayTeam_Id = $match->getAwayTeamId();
             query($con, "INSERT INTO youthmatch(id, date, type, homeTeam_id, awayTeam_id) VALUES($youthMatch_id, '$youthMatch_date', $youthMatch_type, $youthMatch_HomeTeam_Id, $youthMatch_AwayTeam_Id);");
         }
+
     }
     query($con, "UPDATE youthteam SET status=1 WHERE id=$youthTeam_id;");
     updateProcess($con, $exec_id);
@@ -119,8 +134,7 @@ function isBestPlayer($age, $days, $youthMatch_date, $position, $stars)
     $minimal[15][6] = 7.0;
     $minimal[16][6] = 7.5;
     */
-
-    return $minimal[$age][$position] <= $stars;
+    return  $position < 7 && $minimal[$age][$position] <= (double) $stars;
 }
 
 // Convert hattrick MatchRoleID to friendly position

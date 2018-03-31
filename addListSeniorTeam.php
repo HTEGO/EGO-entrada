@@ -3,9 +3,7 @@
 require_once 'updateSpecificSeniorTeamService.php';
 
 $teamsJson = '{"teams": [
-    [1585054,15251]]
-}';
- /*
+    [1585054,15251],
     [1372906,38655],
     [1853077,14500],
     [312957,38307],
@@ -19,7 +17,6 @@ $teamsJson = '{"teams": [
     [1430346,14598],
     [1583077,14500]
 ]}';
-*/
 
     $teams = json_decode($teamsJson,true);
 

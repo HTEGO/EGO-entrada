@@ -36,7 +36,7 @@ try {
                 exit();
             }
             $numYouthMatchLineups = query($con, "SELECT count(*) AS 'total' FROM youthmatchlineup;")->fetch_assoc()['total'];
-            $params = array('numYouthTeams' => $numYouthTeams, 'numYouthMatchLineups' => $numYouthMatchLineups, 'startDate' => date("Y-m-d", strtotime("-1 week")), 'endDate' => date("Y-m-d"));
+            $params = array('numYouthTeams' => $numYouthTeams, 'numYouthMatchLineups' => $numYouthMatchLineups, 'startDate' => date("Y-m-d", strtotime("-8 day")), 'endDate' => date("Y-m-d", strtotime("-1 day")));
             $exec_id = startProcess($con, $process_id, http_build_query($params));
             query($con, "UPDATE youthteam SET status=0;");
         } else {
@@ -61,7 +61,7 @@ try {
     $youthTeams = explode('|', $youthTeam_ids, PARALLEL_THREADS + 1);
     $youthTeams_count = count($youthTeams);
     $continue = false;
-    
+
     //If there is more teams than threads, it will open a new curl conection.
     if ($youthTeams_count == PARALLEL_THREADS + 1) {
         $continue = true;
